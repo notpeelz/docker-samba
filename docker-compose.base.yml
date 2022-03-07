@@ -1,7 +1,5 @@
 services:
   samba:
     build: .
-    logging:
-      driver: journald
     restart: always
     network_mode: host
