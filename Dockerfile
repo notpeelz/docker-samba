@@ -1,5 +1,4 @@
-ARG ALPINE_VERSION=3.14
-FROM alpine:${ALPINE_VERSION}
+FROM alpine:3.17
 
 RUN apk add --update --no-cache \
   s6-overlay \
