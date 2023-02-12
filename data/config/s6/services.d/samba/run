@@ -2,4 +2,4 @@
 # vim:ft=sh
 
 smbd="$(which smbd)"
-exec env -i "$smbd" --no-process-group -FD --log-stdout
+exec env -i "$smbd" --no-process-group -FD --debug-stdout
