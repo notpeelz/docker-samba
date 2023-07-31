@@ -10,7 +10,6 @@ services:
         guest ok = no
         read only = no
         browseable = yes
-        dfree command = /data/bin/dfree.sh
         create mask = 0740
         force create mode = 0740
         directory mask = 0750
