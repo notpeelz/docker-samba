@@ -18,3 +18,4 @@ services:
         myuser:1000:0cb6948805f797bf2a82807973b89537
     volumes:
       - /mnt/myhdd/torrents:/shares/media
+    network_mode: host
