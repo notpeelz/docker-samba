@@ -1,5 +1,10 @@
 FROM alpine:3.17
 
+# If any dependencies fail, the entire supervision tree should fail
+ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
+# Prevent services from timing out
+ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0
+
 RUN apk add --update --no-cache \
   s6-overlay \
   bash \
@@ -12,10 +17,8 @@ RUN mkdir -p /var/lib/samba/private/ \
     /var/lib/samba/winbindd_idmap.tdb \
   && rm /etc/samba/smb.conf
 
-COPY ./data /data
-
-COPY ./data/config/s6/cont-init.d /etc/cont-init.d
-COPY ./data/config/s6/services.d /etc/services.d
+COPY ./data/config/s6/s6-rc.d /etc/s6-overlay/s6-rc.d
+COPY ./data/scripts /scripts
 
 EXPOSE 139 445
 ENTRYPOINT ["/init"]

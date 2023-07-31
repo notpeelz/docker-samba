@@ -1,5 +1,7 @@
 #!/usr/bin/with-contenv /bin/bash
 # vim:ft=sh
 
+set -Eeuo pipefail
+
 smbd="$(which smbd)"
 exec env -i "$smbd" --no-process-group -FD --debug-stdout

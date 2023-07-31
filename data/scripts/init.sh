@@ -7,7 +7,24 @@ INITIALIZED="/.initialized"
 
 if [[ ! -f "$INITIALIZED" ]]; then
   echo "SAMBA CONFIG: initializing"
-  cp /data/config/samba/smb.conf /etc/samba/smb.conf
+  cat > /etc/samba/smb.conf <<- '  EOF'
+    [global]
+    server role = standalone server
+
+    security = user
+    passdb backend = smbpasswd
+    obey pam restrictions = no
+
+    load printers = no
+    printcap name = /dev/null
+
+    socket options = TCP_NODELAY IPTOS_LOWDELAY SO_RCVBUF=524288 SO_SNDBUF=524288
+    dns proxy = no
+    wide links = yes
+    follow symlinks = yes
+    unix extensions = no
+    acl allow execute always = yes
+  EOF
 
   if [[ -z "${SAMBA_CONF_LOG_LEVEL+x}" ]]; then
     SAMBA_CONF_LOG_LEVEL="1"
@@ -48,10 +65,10 @@ if [[ ! -f "$INITIALIZED" ]]; then
       smbpasswd -a -n "$user" > /dev/null
       pdbedit -c='[]' --set-nt-hash="$pwdhash" "$user" > /dev/null
       smbpasswd -e "$user"
-    fi
 
-    # print user info
-    pdbedit -r "$user"
+      # print user info
+      pdbedit -r "$user"
+    fi
   done
 
   touch "$INITIALIZED"
