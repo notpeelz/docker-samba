@@ -1,6 +1,8 @@
 #!/usr/bin/with-contenv /bin/bash
 # vim:ft=sh
 
+set -Eeuo pipefail
+
 INITIALIZED="/.initialized"
 
 if [[ ! -f "$INITIALIZED" ]]; then
