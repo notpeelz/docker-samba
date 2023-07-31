@@ -38,16 +38,15 @@ if [[ ! -f "$INITIALIZED" ]]; then
   for line in "$USERS_CONF"; do
     [[ -z "$line" ]] && continue
 
-    user="$(echo "$line"|cut -d':' -f1)"
-    uid="$(echo "$line"|cut -d':' -f2)"
-    pwdhash="$(echo "$line"|cut -d':' -f3)"
-
+    IFS=':' read user uid pwdhash <<< "$line"
     echo "ACCOUNT: adding account '$user' with UID $uid"
 
     adduser -D -H -u "$uid" -s /bin/false "$user"
-    smbpasswd -a -n "$user" > /dev/null
-    pdbedit -c='[]' --set-nt-hash="$pwdhash" "$user" > /dev/null
-    smbpasswd -e "$user"
+    if [[ -n "${pwdhash:-}" ]]; then
+      smbpasswd -a -n "$user" > /dev/null
+      pdbedit -c='[]' --set-nt-hash="$pwdhash" "$user" > /dev/null
+      smbpasswd -e "$user"
+    fi
 
     # print user info
     pdbedit -r "$user"
